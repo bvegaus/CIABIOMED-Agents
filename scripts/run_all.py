@@ -1,9 +1,23 @@
 import json
 import os
 import pandas as pd
+
+import sys
+import os
+import warnings
+from sklearn.exceptions import DataConversionWarning
+
+# Ignorar solo el warning de nombres de características
+warnings.filterwarnings("ignore", message="X does not have valid feature names.*")
+
+# Añade la ruta raíz del proyecto al path para que encuentre 'src'
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
 from src.data_preprocessing import cargar_datos
 from src.train_models import entrenar_modelo
 from src.explainability import explicar_muestra
+
 
 DATASETS = ["breast_cancer", "diabetes"]
 OUTPUT_DIR = "outputs/explanations"
@@ -15,8 +29,9 @@ def main():
     for dataset in DATASETS:
         print(f"Cargando dataset {dataset}...")
         X, y = cargar_datos(dataset)
+        print(y.value_counts())
 
-        print("Entrenando modelo...")
+        print("Entrenando modelo...") 
         modelo, X_test, y_test, acc = entrenar_modelo(X, y)
 
         resultados[dataset] = {
